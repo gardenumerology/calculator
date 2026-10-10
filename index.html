@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gardenumerology | Life Path Calculator</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 30px 16px;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    font-family: Georgia, serif;
+    color: #33244e;
+    background: linear-gradient(145deg, #f6f0ff, #e7e7ff, #faf5ff);
+  }
+
+  .card {
+    width: 100%;
+    max-width: 540px;
+    padding: 38px 28px;
+    text-align: center;
+    background: #fffdfd;
+    border: 1px solid #ded0f2;
+    border-radius: 24px;
+    box-shadow: 0 12px 40px #59427b15;
+  }
+
+  .brand {
+    color: #8270ad;
+    letter-spacing: 4px;
+    font: 12px Arial, sans-serif;
+  }
+
+  h1 {
+    font-size: 34px;
+    font-weight: normal;
+    margin: 18px 0 12px;
+  }
+
+  p { line-height: 1.7; }
+
+  label {
+    display: block;
+    margin: 25px 0 8px;
+  }
+
+  input, button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  input {
+    border: 1px solid #cbbbe1;
+    color: #33244e;
+    background: white;
+  }
+
+  button {
+    margin-top: 14px;
+    border: 0;
+    cursor: pointer;
+    background: #75619d;
+    color: white;
+    transition: background 0.2s;
+  }
+
+  button:hover { background: #5e4b85; }
+
+  #result { margin-top: 28px; }
+
+  .number {
+    font-size: 76px;
+    color: #8065aa;
+    margin: 8px 0;
+  }
+
+  .subtitle { font-size: 21px; }
+
+  .reading {
+    font-family: Arial, sans-serif;
+    line-height: 1.8;
+  }
+
+  .hidden { display: none; }
+
+  .note {
+    font: 12px Arial, sans-serif;
+    color: #82778e;
+    margin-top: 24px;
+  }
+</style>
+</head>
+
+<body>
+<main class="card">
+  <div class="brand">✧ GARDENUMEROLOGY ✧</div>
+
+  <h1>Discover Your Life Path</h1>
+
+  <p>
+    Every birth date carries a number. Discover yours and explore
+    the themes that shape your personal journey.
+  </p>
+
+  <form id="form">
+    <label for="birthday">Your date of birth</label>
+    <input id="birthday" type="date" required>
+    <button type="submit">Reveal My Life Path</button>
+  </form>
+
+  <section id="result" class="hidden" aria-live="polite">
+    <p>Your Life Path Number is</p>
+    <div class="number" id="number"></div>
+    <div class="subtitle" id="title"></div>
+    <p class="reading" id="reading"></p>
+    <button type="button" id="reset">Try Another Birthday</button>
+  </section>
+
+  <p class="note">
+    A numerology reading for self-reflection and personal discovery.
+  </p>
+</main>
+
+<script>
+const readings = {
+  1: [
+    "The Independent Leader",
+    "Your path is associated with independence, initiative, and originality. You may feel drawn to create your own direction, trust your abilities, and turn new ideas into action. Your growth may involve balancing self-reliance with openness to support."
+  ],
+
+  2: [
+    "The Harmonizer",
+    "Your path emphasizes cooperation, sensitivity, and connection. You may have a gift for understanding different perspectives and bringing people together. Your growth may involve honoring your own needs while caring for others."
+  ],
+
+  3: [
+    "The Creative Communicator",
+    "Your path highlights creativity, expression, and joy. You may be drawn to writing, art, performance, or sharing ideas. Your growth may involve giving your talents consistent attention and expressing yourself authentically."
+  ],
+
+  4: [
+    "The Builder",
+    "Your path centers on stability, patience, and practical effort. You may thrive when turning ideas into something lasting. Your growth may involve staying flexible and making room for spontaneity alongside responsibility."
+  ],
+
+  5: [
+    "The Explorer",
+    "Your path is associated with freedom, curiosity, and change. You may enjoy new experiences and discovering different ways of living. Your growth may involve creating enough structure to make your freedom sustainable."
+  ],
+
+  6: [
+    "The Nurturer",
+    "Your path highlights care, harmony, and responsibility. You may feel drawn to supporting others and creating welcoming environments. Your growth may involve maintaining boundaries and remembering that your own well-being matters, too."
+  ],
+
+  7: [
+    "The Seeker",
+    "Your path emphasizes reflection, analysis, and inner discovery. You may be drawn to life's deeper questions and enjoy time to explore them. Your growth may involve balancing solitude with trust and meaningful connection."
+  ],
+
+  8: [
+    "The Achiever",
+    "Your path focuses on ambition, leadership, and the responsible use of resources. You may enjoy organizing projects and turning goals into tangible results. Your growth may involve defining success on your own terms and balancing achievement with fulfillment."
+  ],
+
+  9: [
+    "The Humanitarian",
+    "Your path is associated with compassion, perspective, and completion. You may feel moved by creative expression or causes larger than yourself. Your growth may involve letting go of what has run its course without neglecting your own needs."
+  ],
+
+  11: [
+    "The Inspired Intuitive",
+    "In numerology, 11 is a master number associated with intuition, inspiration, and heightened sensitivity. Your path invites you to explore your insights while staying grounded and giving your ideas practical expression."
+  ],
+
+  22: [
+    "The Master Builder",
+    "In numerology, 22 is a master number associated with turning ambitious visions into practical contributions. Your path invites you to pair imagination with steady action, patience, and a strong sense of purpose."
+  ],
+
+  33: [
+    "The Compassionate Teacher",
+    "In numerology, 33 is a master number associated with compassion, service, and uplifting others. Your path invites you to share what you learn while remembering that care for yourself is part of sustainable generosity."
+  ],
+
+  44: [
+    "The Master Architect",
+    "In numerology, 44 is a master number associated with discipline, stability, and building lasting foundations on a large scale. Your path invites you to combine practical wisdom with a greater vision, creating something meaningful through dedication, responsibility, and perseverance."
+  ]
+};
+
+// Preserve master numbers 11, 22, 33, and 44.
+function reduceNumber(n) {
+  while (n > 9 && ![11, 22, 33, 44].includes(n)) {
+    n = String(n)
+      .split("")
+      .reduce((sum, digit) => sum + Number(digit), 0);
+  }
+  return n;
+}
+
+// Calculate the Life Path number from the birth date.
+function lifePath(dateString) {
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  const m = reduceNumber(month);
+  const d = reduceNumber(day);
+
+  const y = reduceNumber(
+    String(year)
+      .split("")
+      .reduce((sum, digit) => sum + Number(digit), 0)
+  );
+
+  return reduceNumber(m + d + y);
+}
+
+const form = document.getElementById("form");
+const dateInput = document.getElementById("birthday");
+const result = document.getElementById("result");
+
+dateInput.max = new Date().toISOString().split("T")[0];
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const value = dateInput.value;
+  if (!value) return;
+
+  const [year, month, day] = value.split("-").map(Number);
+
+  const date = new Date(Date.UTC(year, month - 1, day));
+  const today = new Date();
+  const todayUTC = Date.UTC(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  );
+
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day ||
+    date.getTime() > todayUTC
+  ) {
+    alert("Please enter a valid birth date.");
+    return;
+  }
+
+  const n = lifePath(value);
+
+  document.getElementById("number").textContent = n;
+  document.getElementById("title").textContent = readings[n][0];
+  document.getElementById("reading").textContent = readings[n][1];
+
+  result.classList.remove("hidden");
+  result.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
+});
+
+document.getElementById("reset").addEventListener("click", function() {
+  dateInput.value = "";
+  result.classList.add("hidden");
+  form.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+});
+</script>
+</body>
+</html>
