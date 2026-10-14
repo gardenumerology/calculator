@@ -1171,6 +1171,13 @@
         document.getElementById("newsletter-email").value = "";
       }
     });
+    // Newsletter form handler with Brevo support & success confirmation
+    document.getElementById("newsletter-form").addEventListener("submit", function() {
+      setTimeout(() => {
+        alert("Thank you for subscribing to monthly numerology reports!");
+        document.getElementById("newsletter-email").value = "";
+      }, 300);
+    });
   </script>
 </body>
 </html>
